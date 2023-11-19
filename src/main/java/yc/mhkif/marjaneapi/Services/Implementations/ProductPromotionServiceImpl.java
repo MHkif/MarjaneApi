@@ -67,23 +67,30 @@ public class ProductPromotionServiceImpl implements IProductPromotionService {
         else {
 
             Promotion productPromotion = mapToEntity(promotion);
-            Optional<Manager> manager = managerService.findByCIN(productPromotion.getProduct().getCategory().getDepartment().getManager().getCin());
+            Manager managerFromPromotion = productPromotion.getProduct().getCategory().getDepartment().getManager();
+            Optional<Manager> manager = managerService.findByCIN(managerFromPromotion.getCin());
 
             if (manager.isPresent()) {
                 repository.save(productPromotion);
+
                 List<PromotionCenterDTO> promotionCenterDTOs = promotion.getCenters().stream()
                         .map(center -> PromotionCenterDTO.builder()
                                         .id(new PromotionCenterId(productPromotion.getId(), center.getId()))
                                         .productPromotion(productPromotion)
-                                        .center(Optional.of(center).orElseThrow(() -> new IllegalStateException("Center not found with ID " + center.getId())))
-                                        .manager(manager.orElseThrow(() -> new IllegalStateException("Manager not found")))
+                                        .center(Optional.of(center)
+                                                .orElseThrow(
+                                                        () -> new IllegalStateException("Center not found with ID " + center.getId())))
+                                        .manager(manager
+                                                .orElseThrow(() -> new IllegalStateException("Manager not found")))
                                         .performedAt(null)
                                         .build()).toList();
+
                 promotionCenterDTOs.forEach(promotionCenterService::save);
 
                 return Optional.of(productPromotion);
             } else {
-                return Optional.empty();
+                throw new IllegalStateException("Manager not found");
+                //return Optional.empty();
             }
         }
 
@@ -133,6 +140,21 @@ public class ProductPromotionServiceImpl implements IProductPromotionService {
         }
         return PromotionResponse.builder()
                 .id(promotion.getId())
+                .product(promotion.getProduct())
+                .percentage(promotion.getPercentage())
+                .createdAt(promotion.getCreatedAt())
+                .startAt(promotion.getStartAt())
+                .endAt(promotion.getEndAt())
+                .build();
+    }
+
+    public PromotionRequest mapToReq(Promotion promotion){
+        if (promotion == null) {
+            return null;
+        }
+        return PromotionRequest.builder()
+                .id(promotion.getId())
+                .admin(promotion.getAdmin())
                 .product(promotion.getProduct())
                 .percentage(promotion.getPercentage())
                 .createdAt(promotion.getCreatedAt())

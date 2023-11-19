@@ -42,7 +42,8 @@ public class PromotionController {
 
     @PostMapping(value = "/promotions/products/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<PromotionResponse> savePromotion(@RequestBody PromotionRequest request, @RequestHeader Map<String, String> headers) {
+    public ResponseEntity<PromotionResponse> savePromotion(@RequestBody PromotionRequest request,
+                                                           @RequestHeader Map<String, String> headers) {
         if(headers.get("token") != null){
             Optional<ProxyAdmin> proxyAdmin = this.proxyAdminService.findByCIN(headers.get("token"));
             if (proxyAdmin.isEmpty()){
