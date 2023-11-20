@@ -34,6 +34,7 @@ public class PromotionServiceTest {
     @InjectMocks
     private ProductPromotionServiceImpl promotionService;
 
+    // Note :
     // It ensures that Mockito annotations are processed before each test method is run,
     // setting up the mocks and preparing the environment for testing.
     @BeforeEach
