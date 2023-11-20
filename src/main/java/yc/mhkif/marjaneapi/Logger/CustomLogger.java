@@ -26,9 +26,18 @@ public class CustomLogger {
         logData.put("action", action);
 
         try (FileWriter fileWriter = new FileWriter("src/main/logger.json", true)) {
-            objectMapper.writeValue(fileWriter, logData);
-            fileWriter.write("[\n");
-            fileWriter.write("\n]");
+            String logEntry = objectMapper.writeValueAsString(logData);
+            fileWriter.write("\n");
+            fileWriter.write(logEntry);
+            //objectMapper.writeValue(fileWriter, logData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public  void closeLogger() {
+        try (FileWriter fileWriter = new FileWriter("src/main/logger.json", true)) {
+            fileWriter.write(",\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

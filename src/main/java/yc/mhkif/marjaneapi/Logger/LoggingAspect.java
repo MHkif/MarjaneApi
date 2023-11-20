@@ -29,5 +29,6 @@ public class LoggingAspect {
         String action = "Action performed in method: " + methodName;
 
         customLogger.logAction(methodName, action);
+        customLogger.closeLogger();
     }
 }
