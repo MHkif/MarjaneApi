@@ -2,13 +2,12 @@ package yc.mhkif.marjaneapi.Logger;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-        import org.springframework.stereotype.Component;
-
-        import java.io.FileWriter;
-        import java.io.IOException;
-        import java.time.LocalDateTime;
-        import java.util.HashMap;
-        import java.util.Map;
+import org.springframework.stereotype.Component;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class CustomLogger {
@@ -35,7 +34,7 @@ public class CustomLogger {
         }
     }
 
-    public  void closeLogger() {
+    public void closeLogger() {
         try (FileWriter fileWriter = new FileWriter("src/main/logger.json", true)) {
             fileWriter.write(",\n");
         } catch (IOException e) {
