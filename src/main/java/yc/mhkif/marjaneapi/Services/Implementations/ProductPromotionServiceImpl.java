@@ -1,13 +1,13 @@
 package yc.mhkif.marjaneapi.Services.Implementations;
 
 import jakarta.transaction.Transactional;
-import yc.mhkif.marjaneapi.DTOs.PromotionDTO;
 import yc.mhkif.marjaneapi.DTOs.PromotionCenterDTO;
 import yc.mhkif.marjaneapi.DTOs.Requests.PromotionRequest;
 import yc.mhkif.marjaneapi.DTOs.Responses.PromotionResponse;
 import yc.mhkif.marjaneapi.Entities.Implementations.PromotionCenterId;
 import yc.mhkif.marjaneapi.Entities.Manager;
 import yc.mhkif.marjaneapi.Entities.Promotion;
+import yc.mhkif.marjaneapi.Enums.PromotionStatus;
 import yc.mhkif.marjaneapi.Repositories.ProductPromotionRepository;
 import yc.mhkif.marjaneapi.Services.Interfaces.IProductPromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -51,20 +50,18 @@ public class ProductPromotionServiceImpl implements IProductPromotionService {
 
     @Override
     public Optional<Promotion> save(PromotionRequest promotion) {
+
+
         int Qnt = stockService.findByProduct(promotion.getProduct()).getQuantity();
-        if(Qnt <= 0){
-            throw  new IllegalStateException("Quantité en stock : 0 , Ce Produit n'est pas disponible , Vérifier le stock");
-        }
-        else if(promotion.getProduct().getCategory().getName().equals("Computers & Accessories") && promotion.getPercentage().intValue() > 15){
-            throw  new IllegalStateException("La promotion des produits multimédia ne doit pas dépasser 15%.");
-        }
-        else if(promotion.getPercentage().intValue() > 50 && Qnt >= 20){
-            throw  new IllegalStateException("Chaque promotion ne doit pas dépasser 50 % du prix du produit.");
-        }
-        else if(promotion.getPercentage().intValue() > 70){
-            throw  new IllegalStateException("Chaque promotion ne doit pas dépasser 70 % du prix du produit.");
-        }
-        else {
+        if (Qnt <= 0) {
+            throw new IllegalStateException("Quantité en stock : 0 , Ce Produit n'est pas disponible , Vérifier le stock");
+        } else if (promotion.getProduct().getCategory().getName().equals("Computers & Accessories") && promotion.getPercentage().intValue() > 15) {
+            throw new IllegalStateException("La promotion des produits multimédia ne doit pas dépasser 15%.");
+        } else if (promotion.getPercentage().intValue() > 50 && Qnt >= 20) {
+            throw new IllegalStateException("Chaque promotion ne doit pas dépasser 50 % du prix du produit.");
+        } else if (promotion.getPercentage().intValue() > 70) {
+            throw new IllegalStateException("Chaque promotion ne doit pas dépasser 70 % du prix du produit.");
+        } else {
 
             Promotion productPromotion = mapToEntity(promotion);
             Manager managerFromPromotion = productPromotion.getProduct().getCategory().getDepartment().getManager();
@@ -75,22 +72,22 @@ public class ProductPromotionServiceImpl implements IProductPromotionService {
 
                 List<PromotionCenterDTO> promotionCenterDTOs = promotion.getCenters().stream()
                         .map(center -> PromotionCenterDTO.builder()
-                                        .id(new PromotionCenterId(productPromotion.getId(), center.getId()))
-                                        .productPromotion(productPromotion)
-                                        .center(Optional.of(center)
-                                                .orElseThrow(
-                                                        () -> new IllegalStateException("Center not found with ID " + center.getId())))
-                                        .manager(manager
-                                                .orElseThrow(() -> new IllegalStateException("Manager not found")))
-                                        .performedAt(null)
-                                        .build()).toList();
+                                .id(new PromotionCenterId(productPromotion.getId(), center.getId()))
+                                .productPromotion(productPromotion)
+                                .status(PromotionStatus.PENDING)
+                                .center(Optional.of(center)
+                                        .orElseThrow(
+                                                () -> new IllegalStateException("Center not found with ID " + center.getId())))
+                                .manager(manager
+                                        .orElseThrow(() -> new IllegalStateException("Manager not found")))
+                                .performedAt(null)
+                                .build()).toList();
 
                 promotionCenterDTOs.forEach(promotionCenterService::save);
 
                 return Optional.of(productPromotion);
             } else {
                 throw new IllegalStateException("Manager not found");
-                //return Optional.empty();
             }
         }
 
@@ -100,29 +97,27 @@ public class ProductPromotionServiceImpl implements IProductPromotionService {
     @Override
     public Optional<Promotion> update(PromotionRequest promotionRequest) {
         int Qnt = stockService.findByProduct(promotionRequest.getProduct()).getQuantity();
-        if(Qnt <= 0){
-            throw  new IllegalStateException("Quantité en stock : 0 , Ce Produit n'est pas disponible , Vérifier le stock");
-        }
-        else if(promotionRequest.getProduct().getCategory().getName().equals("Computers & Accessories") && promotionRequest.getPercentage().intValue() > 15){
-            throw  new IllegalStateException("La promotion des produits multimédia ne doit pas dépasser 15%.");
-        }
-        else if(promotionRequest.getPercentage().intValue() > 50 && Qnt >= 20){
-            throw  new IllegalStateException("Chaque promotion ne doit pas dépasser 50 % du prix du produit.");
-        }else {
+        if (Qnt <= 0) {
+            throw new IllegalStateException("Quantité en stock : 0 , Ce Produit n'est pas disponible , Vérifier le stock");
+        } else if (promotionRequest.getProduct().getCategory().getName().equals("Computers & Accessories") && promotionRequest.getPercentage().intValue() > 15) {
+            throw new IllegalStateException("La promotion des produits multimédia ne doit pas dépasser 15%.");
+        } else if (promotionRequest.getPercentage().intValue() > 50 && Qnt >= 20) {
+            throw new IllegalStateException("Chaque promotion ne doit pas dépasser 50 % du prix du produit.");
+        } else {
 
             Optional<Manager> manager = managerService.findByCIN(promotionRequest.getProduct().getCategory().getDepartment().getManager().getCin());
 
-                List<PromotionCenterDTO> promotionCenterDTOs = promotionRequest.getCenters().stream()
-                        .map(center -> PromotionCenterDTO.builder()
-                                .id(new PromotionCenterId(promotionRequest.getId(), center.getId()))
-                                .productPromotion(mapToEntity(promotionRequest))
-                                .center(Optional.of(center).orElseThrow(() -> new IllegalStateException("Center not found with ID " + center.getId())))
-                                .manager(manager.orElseThrow(() -> new IllegalStateException("Manager not found")))
-                                .performedAt(null)
-                                .build()).toList();
-                promotionCenterDTOs.forEach(promotionCenterService::save);
+            List<PromotionCenterDTO> promotionCenterDTOs = promotionRequest.getCenters().stream()
+                    .map(center -> PromotionCenterDTO.builder()
+                            .id(new PromotionCenterId(promotionRequest.getId(), center.getId()))
+                            .productPromotion(mapToEntity(promotionRequest))
+                            .center(Optional.of(center).orElseThrow(() -> new IllegalStateException("Center not found with ID " + center.getId())))
+                            .manager(manager.orElseThrow(() -> new IllegalStateException("Manager not found")))
+                            .performedAt(null)
+                            .build()).toList();
+            promotionCenterDTOs.forEach(promotionCenterService::save);
 
-                return Optional.of(mapToEntity(promotionRequest));
+            return Optional.of(mapToEntity(promotionRequest));
 
         }
 
@@ -134,7 +129,7 @@ public class ProductPromotionServiceImpl implements IProductPromotionService {
 
     }
 
-    public PromotionResponse mapToDTO(Promotion promotion){
+    public PromotionResponse mapToDTO(Promotion promotion) {
         if (promotion == null) {
             return null;
         }
@@ -148,7 +143,7 @@ public class ProductPromotionServiceImpl implements IProductPromotionService {
                 .build();
     }
 
-    public PromotionRequest mapToReq(Promotion promotion){
+    public PromotionRequest mapToReq(Promotion promotion) {
         if (promotion == null) {
             return null;
         }
@@ -163,11 +158,11 @@ public class ProductPromotionServiceImpl implements IProductPromotionService {
                 .build();
     }
 
-    public Promotion mapToEntity(PromotionRequest promotion){
+    public Promotion mapToEntity(PromotionRequest promotion) {
         if (promotion == null) {
             return null;
         }
-        Promotion productPromotion =  new Promotion();
+        Promotion productPromotion = new Promotion();
         productPromotion.setId(promotion.getId());
         productPromotion.setAdmin(promotion.getAdmin());
         productPromotion.setProduct(promotion.getProduct());
@@ -178,4 +173,5 @@ public class ProductPromotionServiceImpl implements IProductPromotionService {
 
         return productPromotion;
     }
+
 }

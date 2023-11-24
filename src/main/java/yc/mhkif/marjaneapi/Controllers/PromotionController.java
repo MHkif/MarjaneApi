@@ -1,12 +1,13 @@
 package yc.mhkif.marjaneapi.Controllers;
 
-import org.hibernate.sql.results.graph.embeddable.EmbeddableLoadingLogger_$logger;
-import yc.mhkif.marjaneapi.DTOs.PromotionDTO;
 import yc.mhkif.marjaneapi.DTOs.PromotionCenterDTO;
 import yc.mhkif.marjaneapi.DTOs.Requests.PromotionRequest;
 import yc.mhkif.marjaneapi.DTOs.Responses.PromotionResponse;
 import yc.mhkif.marjaneapi.Entities.*;
 import yc.mhkif.marjaneapi.Entities.Implementations.PromotionCenterId;
+import yc.mhkif.marjaneapi.Enums.PromotionNotifierStatus;
+import yc.mhkif.marjaneapi.Enums.PromotionStatus;
+import yc.mhkif.marjaneapi.Observer_Pattern.*;
 import yc.mhkif.marjaneapi.Services.Implementations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,16 +28,17 @@ public class PromotionController {
     private ProductPromotionServiceImpl prodPromoService;
     private PromotionCenterServiceImpl promoCenterService;
     private ProxyAdminServiceImpl proxyAdminService;
-
+    private PromotionPublisher promotionManager;
 
     @Autowired
     public PromotionController(
             ProductPromotionServiceImpl service, PromotionCenterServiceImpl promotionCenterService,
-            ProxyAdminServiceImpl proxyAdminService) {
-
+            ProxyAdminServiceImpl proxyAdminService, PromotionPublisher promotionManager) {
         this.prodPromoService = service;
         this.promoCenterService = promotionCenterService;
-        this.proxyAdminService = proxyAdminService;}
+        this.proxyAdminService = proxyAdminService;
+        this.promotionManager = promotionManager;
+    }
 
 
 
@@ -51,6 +53,11 @@ public class PromotionController {
             }
             request.setAdmin(proxyAdmin.get());
             Optional<Promotion> promotion = prodPromoService.save(request);
+            if(promotion.isPresent()){
+                promotionManager.subscribeAnObserver(new ManagerNotifier());
+                promotionManager.subscribeAnObserver(new PromotionEventLogger());
+                promotionManager.promotion_notifier(PromotionNotifierStatus.NEW_PROMOTION, prodPromoService.mapToDTO(promotion.get()));
+            }
             return promotion.map(
                             productPromotion -> new ResponseEntity<>(
                                     prodPromoService.mapToDTO(productPromotion), HttpStatus.OK))
@@ -70,7 +77,8 @@ public class PromotionController {
         }
 
         Promotion promotion;
-        promotion = prodPromoService.findById(id).orElseThrow(() -> new IllegalStateException("Promotion not found with ID "+ id));
+        promotion = prodPromoService.findById(id).
+                orElseThrow(() -> new IllegalStateException("Promotion not found with ID "+ id));
 
         return prodPromoService.update(new PromotionRequest()).map(
                         productPromotion -> new ResponseEntity<>(
@@ -101,13 +109,14 @@ public class PromotionController {
         return prodPromoService.findAll()
                 .stream()
                 .map(prodPromoService::mapToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 
     @GetMapping(value = "/promotions/{centerId}/{promoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<PromotionCenterDTO> getPromotionCenter(@PathVariable("centerId") Long centerId, @PathVariable("promoId") Long promoId, @RequestHeader Map<String, String> headers){
+    public ResponseEntity<PromotionCenterDTO> getPromotionCenter(@PathVariable("centerId") Long centerId, @PathVariable("promoId") Long promoId
+            , @RequestHeader Map<String, String> headers){
         if(headers.get("token") == null ){
             throw new IllegalStateException("Token Authentication for Super Admin Not Found ");
         }
@@ -152,7 +161,25 @@ public class PromotionController {
                 .peek(promotionCenterDTO -> {
                     promotionCenterDTO.setPerformedAt(LocalDateTime.now());
                     promoCenterService.save(promotionCenterDTO);
+
+                    // TODO Subscribe An Observer
+                    promotionManager.subscribeAnObserver(new ProxyAdminNotifier());
+
+                    if(!promotionCenterDTO.getStatus().equals(PromotionStatus.PENDING)){
+                        if(promotionCenterDTO.getStatus().equals(PromotionStatus.ACCEPTED)){
+                            promotionManager.promotion_notifier(
+                                    PromotionNotifierStatus.PROMOTION_ACCEPTED, prodPromoService
+                                            .mapToDTO(promotionCenterDTO.getProductPromotion()));
+                        } else{
+                            promotionManager.promotion_notifier(
+                                    PromotionNotifierStatus.PROMOTION_REFUSED, prodPromoService
+                                            .mapToDTO(promotionCenterDTO.getProductPromotion()));
+                        }
+                    }
+
+
                 }).collect(Collectors.toList());
         return ResponseEntity.ok(promotionsList);
     }
+
 }

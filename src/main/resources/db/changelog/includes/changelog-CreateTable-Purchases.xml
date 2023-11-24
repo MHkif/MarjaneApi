@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+
+    <changeSet id="4" author="MHkif">
+
+        <createTable tableName="purchases">
+            <column name="id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="purchases_id_pk"/>
+            </column>
+            <column name="customer_cin" type="VARCHAR(255)">
+                <constraints nullable="false" notNullConstraintName="customer_cin_nn"/>
+            </column>
+            <column name="cashier_cin" type="VARCHAR(255)">
+                <constraints nullable="false" notNullConstraintName="cashier_cin_nn"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="purchases" baseColumnNames="cashier_cin" constraintName="cashier_cin_fk"
+                                 referencedTableName="cashiers" referencedColumnNames="cin"/>
+        <addForeignKeyConstraint baseTableName="purchases" baseColumnNames="customer_cin"
+                                 constraintName="customer_cin_fk" referencedTableName="customers"
+                                 referencedColumnNames="cin"/>
+    </changeSet>
+
+</databaseChangeLog>
+

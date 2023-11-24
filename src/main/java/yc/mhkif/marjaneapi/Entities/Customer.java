@@ -1,10 +1,7 @@
 package yc.mhkif.marjaneapi.Entities;
 
+import jakarta.persistence.*;
 import yc.mhkif.marjaneapi.Entities.Abstracts.Person;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -16,20 +13,10 @@ import lombok.*;
 @Table(name = "customers")
 public class Customer extends Person {
     @Id
-    private String id;
-    @Column(name = "firstName", length = 255, nullable = false)
-    private String firstName;
+    private String cin;
 
-    @Column(name = "lastName", length = 255, nullable = false)
-    private String lastName;
-
-    @Column(name = "email", length = 255, nullable = false)
-    private String email;
-
-    @Column(name = "password", length = 255, nullable = false)
-    private String password;
-
-    @Column(name = "phone", length = 255, nullable = false)
-    private String phone;
+    @ManyToOne
+    @JoinColumn(name = "cashier_cin", referencedColumnName = "CIN", nullable = false)
+    private Cashier cashier;
 
 }

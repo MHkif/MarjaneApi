@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet id="2" author="MHkif">
+        <createTable tableName="customers">
+            <column name="cin" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="customer_cin_pk"/>
+            </column>
+            <column name="cashier_cin" type="VARCHAR(255)">
+                <constraints nullable="false" notNullConstraintName="cashier_cin_nn"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="customers" baseColumnNames="cashier_cin" constraintName="cashier_cin_fk" referencedTableName="cashiers" referencedColumnNames="cin" />
+    </changeSet>
+
+</databaseChangeLog>
+
+

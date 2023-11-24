@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+
+
+    <changeSet id="3" author="MHkif">
+        <createTable tableName="customer_points">
+            <column name="customer_cin" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="customer_cin_pk_fk"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="customer_points" baseColumnNames="customer_cin"
+                                 constraintName="customer_cin_fk" referencedTableName="customers"
+                                 referencedColumnNames="cin"/>
+
+    </changeSet>
+
+
+</databaseChangeLog>
+
+

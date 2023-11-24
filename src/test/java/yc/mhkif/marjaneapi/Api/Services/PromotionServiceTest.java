@@ -45,7 +45,7 @@ public class PromotionServiceTest {
 
     @Test
     public void testSaveMethod_WhenValidPromotion() {
-        int qnt = 27;
+        int qnt =  27;
 
         Manager manager = Manager.builder()
                 .cin("SD708903")

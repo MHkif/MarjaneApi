@@ -7,10 +7,7 @@ import yc.mhkif.marjaneapi.DTOs.Requests.ManagerRequest;
 import yc.mhkif.marjaneapi.DTOs.Responses.ManagerResponse;
 import yc.mhkif.marjaneapi.Entities.Manager;
 import yc.mhkif.marjaneapi.Entities.ProxyAdmin;
-import yc.mhkif.marjaneapi.Services.Implementations.ManagerServiceImpl;
-import yc.mhkif.marjaneapi.Services.Implementations.PromotionCenterServiceImpl;
-import yc.mhkif.marjaneapi.Services.Implementations.ProxyAdminServiceImpl;
-import yc.mhkif.marjaneapi.Services.Implementations.SuperAdminServiceImpl;
+import yc.mhkif.marjaneapi.Services.Implementations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,9 +30,10 @@ public class ManagerController {
 
 
 
+
     @Autowired
     public ManagerController(PromotionCenterServiceImpl promoCenterService,
-                             ManagerServiceImpl service, SuperAdminServiceImpl superAdminService,
+                             ManagerServiceImpl service,
                              ProxyAdminServiceImpl proxyAdminService) {
         this.promoCenterService = promoCenterService;
         this.service = service;
@@ -99,5 +97,6 @@ public class ManagerController {
             throw new IllegalStateException("Token Authentication for Manager Not Found ");
         }
     }
+
 
 }

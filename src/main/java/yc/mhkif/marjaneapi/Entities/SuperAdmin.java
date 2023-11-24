@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "superAdmin")
+@Table(name = "super_admin")
 public class SuperAdmin extends Person {
 
     @Id

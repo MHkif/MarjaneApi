@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
@@ -16,23 +15,25 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "customer_points")
-public class CustomerPoints {
+@Table(name = "purchases")
+public class Purchase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "code", nullable = false)
-    private String code;
-
-    @OneToOne
-    @JoinColumn(name = "customer_cin", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "customer_cin", referencedColumnName = "CIN", nullable = false)
     private Customer customer;
 
-    @Column(name = "points", precision = 10, scale = 2)
-    protected BigDecimal points;
+    @ManyToOne
+    @JoinColumn(name = "cashier_cin", referencedColumnName = "CIN", nullable = false)
+    private Cashier cashier;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
+    private Product product;
 
     @CreationTimestamp
     @Column(name = "created_at")
