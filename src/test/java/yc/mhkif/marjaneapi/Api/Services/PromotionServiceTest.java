@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import yc.mhkif.marjaneapi.DTOs.Requests.PromotionRequest;
 import yc.mhkif.marjaneapi.Entities.*;
-import yc.mhkif.marjaneapi.Repositories.ProductPromotionRepository;
+import yc.mhkif.marjaneapi.Repositories.PromotionRepository;
 import yc.mhkif.marjaneapi.Services.Implementations.*;
 
 import java.math.BigDecimal;
@@ -29,10 +29,10 @@ public class PromotionServiceTest {
     private ManagerServiceImpl managerService;
 
     @Mock
-    private ProductPromotionRepository repository;
+    private PromotionRepository repository;
 
     @InjectMocks
-    private ProductPromotionServiceImpl promotionService;
+    private PromotionServiceImpl promotionService;
 
     // Note :
     // It ensures that Mockito annotations are processed before each test method is run,

@@ -1,4 +1,4 @@
-package yc.mhkif.marjaneapi.Observer_Pattern;
+package yc.mhkif.marjaneapi.Services.Interfaces;
 
 import yc.mhkif.marjaneapi.DTOs.Responses.PromotionResponse;
 import yc.mhkif.marjaneapi.Enums.PromotionNotifierStatus;

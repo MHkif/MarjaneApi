@@ -1,8 +1,9 @@
-package yc.mhkif.marjaneapi.Observer_Pattern;
+package yc.mhkif.marjaneapi.Services.Observables;
 
 
 import yc.mhkif.marjaneapi.DTOs.Responses.PromotionResponse;
 import yc.mhkif.marjaneapi.Enums.PromotionNotifierStatus;
+import yc.mhkif.marjaneapi.Services.Interfaces.PromotionObserver;
 
 public class ManagerNotifier implements PromotionObserver {
     // Now the ManagerNotifier became an Observer that implementing PromotionObserver Contract

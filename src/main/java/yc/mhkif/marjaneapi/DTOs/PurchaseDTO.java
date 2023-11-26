@@ -20,8 +20,6 @@ import java.time.LocalDateTime;
 public class PurchaseDTO {
     private Long id;
     private Customer customer;
-    private Cashier cashier;
     private Product product;
     protected LocalDateTime createdAt;
-    protected LocalDateTime updatedAt;
 }

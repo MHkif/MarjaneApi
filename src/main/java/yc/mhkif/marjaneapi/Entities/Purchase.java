@@ -27,9 +27,6 @@ public class Purchase {
     @JoinColumn(name = "customer_cin", referencedColumnName = "CIN", nullable = false)
     private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name = "cashier_cin", referencedColumnName = "CIN", nullable = false)
-    private Cashier cashier;
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
@@ -39,7 +36,4 @@ public class Purchase {
     @Column(name = "created_at")
     protected LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    protected LocalDateTime updatedAt;
 }

@@ -1,10 +1,10 @@
-package yc.mhkif.marjaneapi.Observer_Pattern;
+package yc.mhkif.marjaneapi.Services.Observables;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import yc.mhkif.marjaneapi.DTOs.PromotionDTO;
 import yc.mhkif.marjaneapi.DTOs.Responses.PromotionResponse;
 import yc.mhkif.marjaneapi.Enums.PromotionNotifierStatus;
+import yc.mhkif.marjaneapi.Services.Interfaces.PromotionObserver;
 
 import java.util.ArrayList;
 import java.util.List;

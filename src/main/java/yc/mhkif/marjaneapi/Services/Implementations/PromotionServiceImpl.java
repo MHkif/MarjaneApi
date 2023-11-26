@@ -8,7 +8,7 @@ import yc.mhkif.marjaneapi.Entities.Implementations.PromotionCenterId;
 import yc.mhkif.marjaneapi.Entities.Manager;
 import yc.mhkif.marjaneapi.Entities.Promotion;
 import yc.mhkif.marjaneapi.Enums.PromotionStatus;
-import yc.mhkif.marjaneapi.Repositories.ProductPromotionRepository;
+import yc.mhkif.marjaneapi.Repositories.PromotionRepository;
 import yc.mhkif.marjaneapi.Services.Interfaces.IProductPromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,19 +18,19 @@ import java.util.Optional;
 
 
 @Service
-public class ProductPromotionServiceImpl implements IProductPromotionService {
+public class PromotionServiceImpl implements IProductPromotionService {
 
-    private ProductPromotionRepository repository;
+    private PromotionRepository repository;
     private StockServiceImpl stockService;
     private PromotionCenterServiceImpl promotionCenterService;
     private ManagerServiceImpl managerService;
 
 
     @Autowired
-    public ProductPromotionServiceImpl(ProductPromotionRepository repository,
-                                       PromotionCenterServiceImpl promotionCenterService,
-                                       ManagerServiceImpl managerService,
-                                       StockServiceImpl stockService) {
+    public PromotionServiceImpl(PromotionRepository repository,
+                                PromotionCenterServiceImpl promotionCenterService,
+                                ManagerServiceImpl managerService,
+                                StockServiceImpl stockService) {
         this.repository = repository;
         this.promotionCenterService = promotionCenterService;
         this.managerService = managerService;

@@ -15,21 +15,20 @@ import yc.mhkif.marjaneapi.Services.Interfaces.IEmailService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements ICustomerService {
 
     private final CustomerRepository repository;
-    private final PurchaseServiceImpl purchasesService;
     private final CustomerPointServiceImpl customerPointService;
     private final IEmailService emailService;
 
     @Autowired
     public CustomerServiceImpl(CustomerRepository repository , CustomerPointServiceImpl customerPointService,
-                               PurchaseServiceImpl purchasesService, IEmailService emailService) {
+                               IEmailService emailService) {
         this.repository = repository;
-        this.purchasesService = purchasesService;
         this.customerPointService = customerPointService;
         this.emailService = emailService;
     }
@@ -68,8 +67,11 @@ public class CustomerServiceImpl implements ICustomerService {
             customerPoints.setUpdatedAt(null);
             customerPointService.save(customerPoints);
             // # TODO Send Email to Customer About his Card Code
-
-            emailService.sendSimpleMailMessage(customer.getFirstName()+" "+customer.getLastName(), customer.getEmail(), customerPoints.getCode());
+            String name = customer.getFirstName()+" "+customer.getLastName();
+            String sendingTo = customer.getEmail();
+            String subject = "New Account : CardPoints Code";
+            String body = "Hello "+ name +" we Hope you are doing well, Your CardPoints Code : "+customerPoints.getCode();
+            emailService.sendSimpleMailMessage(name, sendingTo, subject, body);
             return customerOptional;
         }
     }

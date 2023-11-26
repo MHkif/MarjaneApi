@@ -7,6 +7,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import yc.mhkif.marjaneapi.Services.Interfaces.IEmailService;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements IEmailService {
@@ -17,13 +19,13 @@ public class EmailServiceImpl implements IEmailService {
     private final JavaMailSender emailSender;
 
     @Override
-    public void sendSimpleMailMessage(String name, String to, String token) {
+    public void sendSimpleMailMessage(String name, String to, String subject, String body) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setSubject("New Account : CardPoints Code");
+            message.setSubject(subject);
             message.setFrom(fromEmail);
             message.setTo(fromEmail); // to
-            message.setText("Hello "+ name +" we Hope you are doing well, Your CardPoints Code : "+token);
+            message.setText(body);
             emailSender.send(message);
         } catch (Exception exception) {
             System.out.println(exception.getMessage());

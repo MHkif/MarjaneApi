@@ -7,13 +7,16 @@ import yc.mhkif.marjaneapi.Entities.*;
 import yc.mhkif.marjaneapi.Entities.Implementations.PromotionCenterId;
 import yc.mhkif.marjaneapi.Enums.PromotionNotifierStatus;
 import yc.mhkif.marjaneapi.Enums.PromotionStatus;
-import yc.mhkif.marjaneapi.Observer_Pattern.*;
 import yc.mhkif.marjaneapi.Services.Implementations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import yc.mhkif.marjaneapi.Services.Observables.ManagerNotifier;
+import yc.mhkif.marjaneapi.Services.Observables.PromotionEventLogger;
+import yc.mhkif.marjaneapi.Services.Observables.PromotionPublisher;
+import yc.mhkif.marjaneapi.Services.Observables.ProxyAdminNotifier;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,14 +28,14 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "marjane/api/v1")
 public class PromotionController {
 
-    private ProductPromotionServiceImpl prodPromoService;
+    private PromotionServiceImpl prodPromoService;
     private PromotionCenterServiceImpl promoCenterService;
     private ProxyAdminServiceImpl proxyAdminService;
     private PromotionPublisher promotionManager;
 
     @Autowired
     public PromotionController(
-            ProductPromotionServiceImpl service, PromotionCenterServiceImpl promotionCenterService,
+            PromotionServiceImpl service, PromotionCenterServiceImpl promotionCenterService,
             ProxyAdminServiceImpl proxyAdminService, PromotionPublisher promotionManager) {
         this.prodPromoService = service;
         this.promoCenterService = promotionCenterService;
