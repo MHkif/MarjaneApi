@@ -45,3 +45,5 @@
 
 {"method":"ApplyToPromotions","action":"Action performed in method: ApplyToPromotions","timestamp":[2023,11,24,15,28,12,115955000]}
 
+
+{"method":"savePromotion","action":"Action performed in method: savePromotion","timestamp":[2023,11,28,10,8,56,955663300]},

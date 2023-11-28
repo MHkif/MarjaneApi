@@ -6,7 +6,7 @@
 
 
 
-    <changeSet id="6" author="MHkif">
+    <changeSet id="3" author="MHkif">
         <createTable tableName="customer_points">
             <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="customer_points_pk"/>

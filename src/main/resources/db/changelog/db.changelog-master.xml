@@ -13,13 +13,8 @@
 
     <include file="/includes/changelog-CreateTable-Cashiers.xml" relativeToChangelogFile="true"/>
     <include file="/includes/changelog-CreateTable-Customers.xml" relativeToChangelogFile="true"/>
-    <include file="/includes/changelog-CreateTable-CustomerPoints.xml" relativeToChangelogFile="true"/>
-    <include file="/includes/changelog-CreateTable-Purchases.xml" relativeToChangelogFile="true"/>
-    <include file="/includes/changelog-DropTable-CustomerPoints.xml" relativeToChangelogFile="true"/>
     <include file="/includes/changelog-CreateTable-Customer_Points.xml" relativeToChangelogFile="true"/>
-    <include file="/includes/changelog-AlterTable-Purchases-DropColumn-cashier_cin.xml" relativeToChangelogFile="true"/>
-    <include file="/includes/changelog-DropTable-Purchases.xml" relativeToChangelogFile="true"/>
-    <include file="/includes/changelog-ReCreateTable-Purchases.xml" relativeToChangelogFile="true"/>
+    <include file="includes/changelog-CreateTable-Purchases.xml" relativeToChangelogFile="true"/>
 
 
 
