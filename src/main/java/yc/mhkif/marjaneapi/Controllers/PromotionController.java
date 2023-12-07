@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(path = "marjane/api/v1")
 public class PromotionController {
@@ -148,7 +149,7 @@ public class PromotionController {
     @ResponseBody
     public ResponseEntity<List<PromotionCenterDTO>> ApplyToPromotions(@RequestBody List<PromotionCenterDTO>  promotions, @RequestHeader Map<String, String> headers){
         if(headers.get("token") == null ){
-            throw new IllegalStateException("Token Authentication for Manager Not Found ");
+            throw new IllegalStateException("Token Authentication for Manager Not Found : "+ headers.get("token") );
         }
         List<PromotionCenterDTO> allPromotions =  promoCenterService.findAll()
                 .stream()

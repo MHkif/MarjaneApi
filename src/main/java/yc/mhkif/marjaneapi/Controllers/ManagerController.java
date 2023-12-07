@@ -1,11 +1,13 @@
 package yc.mhkif.marjaneapi.Controllers;
 
 
+import org.springframework.data.domain.Page;
 import yc.mhkif.marjaneapi.DTOs.PromotionCenterDTO;
 import yc.mhkif.marjaneapi.DTOs.Requests.LoginRequest;
 import yc.mhkif.marjaneapi.DTOs.Requests.ManagerRequest;
 import yc.mhkif.marjaneapi.DTOs.Responses.ManagerResponse;
 import yc.mhkif.marjaneapi.Entities.Manager;
+import yc.mhkif.marjaneapi.Entities.PromotionCenter;
 import yc.mhkif.marjaneapi.Entities.ProxyAdmin;
 import yc.mhkif.marjaneapi.Services.Implementations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(path = "marjane/api/v1")
 public class ManagerController {
@@ -73,17 +76,22 @@ public class ManagerController {
 
     @GetMapping(value = "/managers/promotions", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<List<PromotionCenterDTO>> getAllPromotionsByManager(@RequestHeader Map<String, String> headers) {
+    public ResponseEntity<List<PromotionCenterDTO>> getAllPromotionsByManager() {
 
+/*
         if(headers.get("token") != null && headers.get("cin") != null) {
+
+
 
             if(this.service.isOutOfTime()){
                 throw new IllegalStateException("En tant que manager, vous ne pouvez voir les promotions que de 8 à 12 heures .");
             }
-            Optional<Manager> managerEntity =  this.service.findByCIN(headers.get("cin"));
+
+ */
+            Optional<Manager> managerEntity =  this.service.findByCIN("LS103216");
 
             if(managerEntity.isEmpty()){
-                throw new IllegalStateException("Could Not Find Manager With This Cin : " + headers.get("cin"));
+                throw new IllegalStateException("Could Not Find Manager With This Cin : LS103216" );
             }
 
             List<PromotionCenterDTO> promotions = promoCenterService.findAllPromsByManager(managerEntity.get())
@@ -93,10 +101,30 @@ public class ManagerController {
 
             return ResponseEntity.ok(promotions);
 
-        }else {
+        //}
+        /*
+        else {
             throw new IllegalStateException("Token Authentication for Manager Not Found ");
         }
+
+         */
     }
+
+    @GetMapping(value = "/managers/promotions/pages")
+    @ResponseBody
+    public ResponseEntity<Page<PromotionCenter>> getPagesPromotionsByManager(@RequestParam int page, @RequestParam int size) {
+        Optional<Manager> managerEntity =  this.service.findByCIN("LS103216");
+
+        if(managerEntity.isEmpty()){
+            throw new IllegalStateException("Could Not Find Manager With This Cin : LS103216" );
+        }
+
+        Page<PromotionCenter> promotions = promoCenterService.getPagesByManager(managerEntity.get(), page, size);
+
+        return ResponseEntity.ok(promotions);
+
+    }
+
 
 
 }

@@ -1,31 +1,48 @@
 package yc.mhkif.marjaneapi.Services.Implementations;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import yc.mhkif.marjaneapi.DTOs.PromotionCenterDTO;
 import yc.mhkif.marjaneapi.Entities.Implementations.PromotionCenterId;
 import yc.mhkif.marjaneapi.Entities.Manager;
+import yc.mhkif.marjaneapi.Entities.Promotion;
 import yc.mhkif.marjaneapi.Entities.PromotionCenter;
+import yc.mhkif.marjaneapi.Entities.ProxyAdmin;
 import yc.mhkif.marjaneapi.Repositories.PromotionCenterRepository;
 import yc.mhkif.marjaneapi.Services.Interfaces.IPromotionCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PromotionCenterServiceImpl implements IPromotionCenterService{
+public class PromotionCenterServiceImpl implements IPromotionCenterService {
 
     private PromotionCenterRepository repository;
-    private ManagerServiceImpl managerService;
 
     @Autowired
-    public PromotionCenterServiceImpl(PromotionCenterRepository repository, ManagerServiceImpl managerService) {
+    public PromotionCenterServiceImpl(PromotionCenterRepository repository ) {
         this.repository = repository;
-        this.managerService = managerService;
+    }
+
+
+    @Override
+    public Page<PromotionCenter> getPagesByManager(Manager manager,int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<PromotionCenter> promotions = this.repository.findPageableByManager(manager,pageRequest);
+        return promotions;
+    }
+
+    public Page<PromotionCenter> getPagesByAdmin(ProxyAdmin proxyAdmin,int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<PromotionCenter> promotions = this.repository.findPageableByAdmin(proxyAdmin.getCin(),pageRequest);
+        return promotions;
     }
 
     @Override
-    public Optional<PromotionCenter>  findById(PromotionCenterId id) {
+    public Optional<PromotionCenter> findById(PromotionCenterId id) {
 
         return repository.findById(id);
     }
@@ -37,7 +54,8 @@ public class PromotionCenterServiceImpl implements IPromotionCenterService{
 
     @Override
     public List<PromotionCenter> findAllPromsByManager(Manager manager) {
-            return repository.findAllByManager(manager);
+        return repository.findAllByManager(manager);
+
     }
 
     @Override

@@ -1,9 +1,13 @@
 package yc.mhkif.marjaneapi.Services.Implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import yc.mhkif.marjaneapi.Entities.Category;
+import yc.mhkif.marjaneapi.Entities.Manager;
 import yc.mhkif.marjaneapi.Entities.Product;
+import yc.mhkif.marjaneapi.Entities.PromotionCenter;
 import yc.mhkif.marjaneapi.Repositories.CategoryRepository;
 import yc.mhkif.marjaneapi.Repositories.ProductRepository;
 import yc.mhkif.marjaneapi.Services.Interfaces.IProductService;
@@ -31,7 +35,11 @@ public class ProductServiceImp implements IProductService {
         }
         throw new IllegalStateException("Product with Id : "+ id + " Not Found");
     }
-
+    public Page<Product> findPages(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Product> products = this.repository.findAll(pageRequest);
+        return products;
+    }
     @Override
     public List<Product> findAll() {
         return repository.findAll();

@@ -1,12 +1,16 @@
 package yc.mhkif.marjaneapi.Services.Implementations;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import yc.mhkif.marjaneapi.DTOs.PromotionCenterDTO;
 import yc.mhkif.marjaneapi.DTOs.Requests.PromotionRequest;
 import yc.mhkif.marjaneapi.DTOs.Responses.PromotionResponse;
 import yc.mhkif.marjaneapi.Entities.Implementations.PromotionCenterId;
 import yc.mhkif.marjaneapi.Entities.Manager;
 import yc.mhkif.marjaneapi.Entities.Promotion;
+import yc.mhkif.marjaneapi.Entities.PromotionCenter;
+import yc.mhkif.marjaneapi.Entities.ProxyAdmin;
 import yc.mhkif.marjaneapi.Enums.PromotionStatus;
 import yc.mhkif.marjaneapi.Repositories.PromotionRepository;
 import yc.mhkif.marjaneapi.Services.Interfaces.IProductPromotionService;
@@ -41,6 +45,11 @@ public class PromotionServiceImpl implements IProductPromotionService {
     @Override
     public Optional<Promotion> findById(Long id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public List<Promotion> findByProxyAdmin(ProxyAdmin proxyAdmin) {
+        return  this.repository.findAllByAdmin(proxyAdmin);
     }
 
     @Override

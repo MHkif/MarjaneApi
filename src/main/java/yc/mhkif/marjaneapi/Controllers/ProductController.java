@@ -1,6 +1,7 @@
 package yc.mhkif.marjaneapi.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "marjane/api/v1")
+@CrossOrigin("*")
 public class ProductController {
 
     private final ProductServiceImp service;
@@ -26,6 +28,12 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAll(){
         List<Product> productList = service.findAll();
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
+    @GetMapping("/products/pages")
+    public ResponseEntity<Page<Product>> getByPages(@RequestParam int page, @RequestParam int size){
+        Page<Product> productList = service.findPages(page, size);
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
     @GetMapping("/products/{id}")

@@ -11,10 +11,6 @@
         http://www.liquibase.org/xml/ns/pro
         http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
 
-    <include file="/includes/changelog-CreateTable-Cashiers.xml" relativeToChangelogFile="true"/>
-    <include file="/includes/changelog-CreateTable-Customers.xml" relativeToChangelogFile="true"/>
-    <include file="/includes/changelog-CreateTable-Customer_Points.xml" relativeToChangelogFile="true"/>
-    <include file="includes/changelog-CreateTable-Purchases.xml" relativeToChangelogFile="true"/>
 
 
 
