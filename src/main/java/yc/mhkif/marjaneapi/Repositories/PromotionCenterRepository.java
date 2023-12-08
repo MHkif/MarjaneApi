@@ -20,7 +20,7 @@ public interface PromotionCenterRepository extends JpaRepository<PromotionCenter
 
     @Query("SELECT pc FROM PromotionCenter pc " +
             "INNER JOIN pc.promotion p " +
-            "WHERE p.admin.cin = :proxyAdmin")
+            "WHERE p.admin.cin = :proxyAdmin order by p.createdAt desc ")
 
     Page<PromotionCenter> findPageableByAdmin(String proxyAdmin, PageRequest pageRequest);
 
